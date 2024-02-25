@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASH RECEIPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #8a978a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #839c84;
+        }
+        .bill {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .bill-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .bill-info p {
+            margin: 5px 0;
+        }
+        .bill-items {
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .bill-items .item {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center">CASH RECEIPT</h2>
+    <form id="billForm">
+        <label for="itemName">Item Name:</label>
+        <input type="text" id="itemName" name="itemName" required>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+
+        <label for="price">Price (₹):</label>
+        <input type="text" id="price" name="price" required>
+
+        <button type="button" onclick="generateBill()">Add Item</button>
+    </form>
+
+    <div class="bill" id="billSection" style="display: none;">
+        <div class="bill-header">
+            <h3>Bill</h3>
+        </div>
+        <div class="bill-items" id="billItems"></div>
+        <div class="total-price" id="totalPrice"></div>
+        <button onclick="printBill()">Generate Bill</button>
+    </div>
+</div>
+
+<script>
+    function generateBill() {
+        var itemName = document.getElementById("itemName").value;
+        var quantity = document.getElementById("quantity").value;
+        var price = document.getElementById("price").value;
+
+        if (!itemName || !quantity || !price) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        var billItem = "<div class='item'>" + itemName + " - Quantity: " + quantity + ", Price: ₹" + price + "</div>";
+        var billItemsDiv = document.getElementById("billItems");
+        billItemsDiv.innerHTML += billItem;
+
+        document.getElementById("itemName").value = "";
+        document.getElementById("quantity").value = "";
+        document.getElementById("price").value = "";
+
+        document.getElementById("billSection").style.display = "block";
+        calculateTotalPrice();
+    }
+
+    function calculateTotalPrice() {
+        var items = document.querySelectorAll(".item");
+        var totalPrice = 0;
+        items.forEach(function(item) {
+            var priceText = item.textContent.split("Price: ₹")[1];
+            var price = parseFloat(priceText);
+            totalPrice += price;
+        });
+
+        document.getElementById("totalPrice").textContent = "Total Price: ₹" + totalPrice.toFixed(2);
+    }
+
+    function printBill() {
+        var printContents = document.getElementById("billSection").innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 8px;
+            /* Adjust padding as needed */
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .bill {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .bill-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .bill-info p {
+            margin: 5px 0;
+        }
+
+        .bill-items {
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .bill-items .item {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 style="text-align: center;">Bill Generator</h2>
+        <form id="shopInfo">
+            <label for="shopName">Shop Name:</label>
+            <input type="text" id="shopName" name="shopName">
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address">
+
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone">
+        </form>
+
+        <form id="billForm">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" name="itemName" required>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+
+            <label for="price">Price (₹):</label>
+            <input type="text" id="price" name="price" required>
+
+            <button type="button" onclick="generateBill()">Add Item</button>
+        </form>
+
+        <div class="bill">
+            <div class="bill-header">
+                <h3>Bill</h3>
+            </div>
+            <div class="bill-info" id="billInfo"></div>
+            <div class="bill-items" id="billItems"></div>
+            <button onclick="printBill()">Generate Bill</button>
+        </div>
+    </div>
+
+    <script>
+        var itemsAdded = [];
+
+        function generateBill() {
+            var itemName = document.getElementById("itemName").value;
+            var quantity = document.getElementById("quantity").value;
+            var price = document.getElementById("price").value;
+
+            if (!itemName || !quantity || !price) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            var billItem = itemName + " - Quantity: " + quantity + ", Price: ₹" + price;
+
+            itemsAdded.push(billItem);
+
+            document.getElementById("itemName").value = "";
+            document.getElementById("quantity").value = "";
+            document.getElementById("price").value = "";
+
+            updateBillItems();
+        }
+
+        function updateBillItems() {
+            var billItemsDiv = document.getElementById("billItems");
+            billItemsDiv.innerHTML = "";
+
+            itemsAdded.forEach(function (item) {
+                billItemsDiv.innerHTML += "<div class='item'>" + item + "</div>";
+            });
+        }
+
+        function printBill() {
+            var shopName = document.getElementById("shopName").value;
+            var address = document.getElementById("address").value;
+            var phone = document.getElementById("phone").value;
+
+            var billInfoDiv = document.getElementById("billInfo");
+            billInfoDiv.innerHTML = "<p><strong>Shop Name:</strong> " + shopName + "</p>" +
+                "<p><strong>Address:</strong> " + address + "</p>" +
+                "<p><strong>Phone Number:</strong> " + phone + "</p>";
+
+            window.print();
+        }
+    </script>
+
+</body>
+
+</html>
